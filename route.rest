@@ -1,0 +1,72 @@
+POST http://localhost:4000/admin/login
+Content-Type: application/json
+
+{
+    "username": "siddhu",
+    "password": "1234"
+}
+
+###
+POST http://localhost:4000/user/register
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjVmODNhZGNjYzkzMTdhODI0ODFlYWM5IiwiaWF0IjoxNzEzMzU0MzE2LCJleHAiOjE3MTMzOTc1MTZ9.dkK1EQAjt8XDf6itN_6BdJSHAL0272oZ1Iajhxsmlzc
+
+{
+    "email": "siddarthyernagula2004@gmail.com",
+    "firstName": "John",
+    "lastName": "Doe",
+    "college": "Example University",
+    "amountPaid": 100,
+    "phno": "1234567890",
+    "year": "2024",
+    "branch": "Computer Science",
+    "collegeId": "12345",
+    "gender": "Male",
+    "img": "example.jpg",
+    "state": "Example State",
+    "district": "Example District",
+    "idUpload": "id.jpg",
+    "city": "Example City",
+    "mode": "offline_mode",
+    "referredBy": "example_referral_id"
+}
+
+###
+DELETE http://localhost:4000/user/delete/tzk241183
+
+
+
+
+###
+POST http://localhost:4000/qr/users
+Content-Type: application/json
+
+{
+  "tzkid": "123456789",
+  "email": "example@example.com",
+  "firstName": "John",
+  "lastName": "Doe",
+  "college": "Example University",
+  "phno": 1234567890,
+  "year": "Senior",
+  "branch": "Computer Science",
+  "collegeId": "E12345",
+  "amountPaid": 50,
+  "gender": "Male",
+  "state": "Example State",
+  "district": "Example District",
+  "city": "Example City",
+  "mode": "Online",
+  "createdAt": "2024-04-24T12:00:00.000Z",
+  "updatedAt": "2024-04-24T12:00:00.000Z",
+  "referredBy": "example_referrer",
+  "rezorpay_order_id": "R123456",
+  "refreals": ["referral1", "referral2"],
+  "regEvents": ["event1", "event2"],
+  "regWorkshop": ["workshop1", "workshop2"]
+}
+
+
+
+###
+GET http://localhost:4000/qr/getUser/tzk240009
