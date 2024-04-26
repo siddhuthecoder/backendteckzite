@@ -69,4 +69,4 @@ Content-Type: application/json
 
 
 ###
-GET http://localhost:4000/qr/getUser/tzk240009
+GET https://backendteckzite.onrender.com/qr/getUser/tzk240009
