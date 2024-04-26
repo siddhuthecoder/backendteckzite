@@ -194,13 +194,14 @@ export const registerUser = async (req, res) => {
 
 export const fetchUsers = async (req, res) => {
   try {
-    const users = await User.find({}, { sub: 0, idUpload: 0, refreals: 0, regEvents: 0, regWorkshop: 0 }); // Excluding specified fields
+    const users = await User.find({}, '-sub -idUpload -refreals -regEvents -regWorkshop'); // Excluding specified fields
     return res.status(200).json({ users });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 
 
 export const fetchUserById = async (req, res) => {
