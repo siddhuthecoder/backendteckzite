@@ -193,8 +193,14 @@ export const registerUser = async (req, res) => {
 };
 
 export const fetchUsers = async (req, res) => {
+  const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+  const limit = parseInt(req.query.limit) || 10; // Default to 10 documents per page
+  const skip = (page - 1) * limit;
+
   try {
-    const users = await User.find({}, '-sub -idUpload -refreals -regEvents -regWorkshop'); // Excluding specified fields
+    const users = await User.find({}, '-sub -idUpload -refreals -regEvents -regWorkshop')
+                             .skip(skip)
+                             .limit(limit);
     return res.status(200).json({ users });
   } catch (error) {
     console.error(error);
