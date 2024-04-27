@@ -198,7 +198,7 @@ export const fetchUsers = async (req, res) => {
     const users = await User.aggregate([
       { $project: { sub: 0, idUpload: 0, refreals: 0, regEvents: 0, regWorkshop: 0 } }, // Exclude specified fields
       // Add more aggregation stages if needed
-    ]).lean();
+    ]).exec(); // Execute the aggregation pipeline
     return res.status(200).json({ users });
   } catch (error) {
     console.error(error);

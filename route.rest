@@ -71,6 +71,8 @@ Content-Type: application/json
 ###
 
 
+
+
 GET http://localhost:4000/user/getAll
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjVmODNhZGNjYzkzMTdhODI0ODFlYWM5IiwiaWF0IjoxNzE0MjE0ODAyLCJleHAiOjE3MTQyNTgwMDJ9.pf-8ak6jZTBRNvxRcmgcF2CMqszU8zcKdIltgfmVpnY
 
