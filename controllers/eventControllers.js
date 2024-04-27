@@ -1,6 +1,6 @@
+import NodeCache from "node-cache";
 import Event from "../models/eventModel.js";
 import User from "../models/userModel.js";
-
 export const createEvent = async (req, res) => {
   const {
     name,
@@ -27,6 +27,7 @@ export const createEvent = async (req, res) => {
       teamSize,
       contact_info,
     });
+    eventCache.del("events");
     return res.status(200).json({ event });
   } catch (error) {
     console.log(error);
@@ -34,17 +35,35 @@ export const createEvent = async (req, res) => {
   }
 };
 
+// Create a new instance of Node Cache with a standard TTL of 1 hour
+const eventCache = new NodeCache({ stdTTL: 3600 });
+
+// Function to fetch events from the database and store them in the cache
+const fetchAndCacheEvents = async () => {
+  try {
+    const events = await Event.find();
+    eventCache.set("events", events);
+  } catch (error) {
+    console.error("Error fetching events:", error);
+  }
+};
+
+// Route to fetch all events
 export const fetchAllEvents = async (req, res) => {
   try {
-    const allEvents = await Event.find();
+    // Attempt to retrieve events from the cache
+    let events = eventCache.get("events");
 
-    if (!allEvents || allEvents.length === 0) {
-      return res.status(404).json({ message: "No events found" });
+    // If events are not found in the cache, fetch from the database and store in the cache
+    if (!events) {
+      await fetchAndCacheEvents();
+      events = eventCache.get("events");
     }
 
-    res.status(200).json(allEvents);
+    return res.status(200).json(events);
   } catch (error) {
-    res.status(500).json({ message: "Internal Server error" });
+    console.error("Error fetching events:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -99,7 +118,7 @@ export const editEvent = async (req, res) => {
     if (!updatedEvent) {
       return res.status(404).json({ message: "Event not found" });
     }
-
+    eventCache.del("events");
     res.status(200).json(updatedEvent);
   } catch (error) {
     res.status(500).json({ message: "Internal Server error" });
@@ -110,6 +129,7 @@ export const deleteEvent = async (req, res) => {
   try {
     const { id } = req.params;
     await Event.findByIdAndDelete(id);
+    eventCache.del("events");
     res.status(200).json({ message: "Deleted Successfully" });
   } catch (error) {
     res.status(500).json({ message: "Internal Server error" });
