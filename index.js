@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import Razorpay from "razorpay";
+import NodeCache from "node-cache";
+
 
 import userRoutes from "./routes/userRoutes.js";
 import eventRoutes from "./routes/eventRoutes.js";
@@ -19,6 +21,9 @@ import { getAllSignUsers } from "./controllers/userControllers.js";
 //middleware
 dotenv.config();
 const app = express();
+const nodeCache=new NodeCache({
+  stdTTL:60
+})
 app.use(express.json());
 app.use(bodyParser.json({ limit: "1mb" }));
 app.use(bodyParser.urlencoded({ limit: "1mb", extended: true }));

@@ -191,45 +191,23 @@ export const registerUser = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
-User
+import NodeCache from "node-cache";
+const userCache = new NodeCache({ stdTTL: 3600 }); // Cache users for 1 hour
 
 export const fetchUsers = async (req, res) => {
   try {
-    const users = await User.aggregate([
-      { $project: { sub: 0, idUpload: 0, refreals: 0, regEvents: 0, regWorkshop: 0 } }, // Exclude specified fields
-      // Add more aggregation stages if needed
-    ]).exec();
-
-    // Convert Mongoose documents to plain JavaScript objects
-    const leanUsers = users.map(user => {
-      return {
-        _id: user._id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        college: user.college,
-        phno: user.phno,
-        year: user.year,
-        branch: user.branch,
-        collegeId: user.collegeId,
-        amountPaid: user.amountPaid,
-        state: user.state,
-        district: user.district,
-        city: user.city,
-        mode: user.mode,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
-        tzkid: user.tzkid
-        // Include other fields as needed
-      };
-    });
-
-    return res.status(200).json({ users: leanUsers });
+    let users = userCache.get("users");
+    if (!users) {
+      users = await User.find({}, '-sub -idUpload -refreals -regEvents -regWorkshop').lean();
+      userCache.set("users", users);
+    }
+    return res.status(200).json({ users });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 
 
 export const fetchUserById = async (req, res) => {
