@@ -198,8 +198,33 @@ export const fetchUsers = async (req, res) => {
     const users = await User.aggregate([
       { $project: { sub: 0, idUpload: 0, refreals: 0, regEvents: 0, regWorkshop: 0 } }, // Exclude specified fields
       // Add more aggregation stages if needed
-    ]).exec(); // Execute the aggregation pipeline
-    return res.status(200).json({ users });
+    ]).exec();
+
+    // Convert Mongoose documents to plain JavaScript objects
+    const leanUsers = users.map(user => {
+      return {
+        _id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        college: user.college,
+        phno: user.phno,
+        year: user.year,
+        branch: user.branch,
+        collegeId: user.collegeId,
+        amountPaid: user.amountPaid,
+        state: user.state,
+        district: user.district,
+        city: user.city,
+        mode: user.mode,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        tzkid: user.tzkid
+        // Include other fields as needed
+      };
+    });
+
+    return res.status(200).json({ users: leanUsers });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
