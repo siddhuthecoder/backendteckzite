@@ -87,7 +87,7 @@ export const editUser = async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "User not registered" });
     }
-
+    userCache.del("users");
     return res.status(200).json({ user, message: "User updated successfully" });
   } catch (error) {
     console.error(error);
@@ -182,7 +182,7 @@ export const registerUser = async (req, res) => {
     user
      )
 
-
+     userCache.del("users");
     return res
       .status(200)
       .json({ user, token, message: "Registration Succesful" });
@@ -377,7 +377,7 @@ export const paymentVerification = async (req, res) => {
      user
      )
  
-
+     userCache.del("users");
     return res
       .status(200)
       .json({ success: true, token, user, message: "Registration SuccessFull" });
