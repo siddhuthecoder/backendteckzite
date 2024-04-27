@@ -1,4 +1,8 @@
 import Notification from "../models/notificationModel.js";
+import NodeCache from "node-cache";
+
+// Create a new cache instance with a TTL of 3600 seconds (1 hour)
+const notificationCache = new NodeCache({ stdTTL: 3600 });
 
 export const newNotification = async (req, res) => {
   try {
@@ -10,6 +14,9 @@ export const newNotification = async (req, res) => {
       picturePath,
       link,
     });
+
+    // Clear the cache after adding a new notification
+    notificationCache.del("notifications");
 
     return res.status(200).json({ notification });
   } catch (error) {
@@ -30,6 +37,9 @@ export const editNotification = async (req, res) => {
       link,
     });
 
+    // Clear the cache after editing a notification
+    notificationCache.del("notifications");
+
     if (!updatedNotification) {
       return res.status(404).json({ message: "Notification not found" });
     }
@@ -37,7 +47,7 @@ export const editNotification = async (req, res) => {
     res.status(200).json(updatedNotification);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -50,24 +60,31 @@ export const deleteNotification = async (req, res) => {
       return res.status(404).json({ message: "Notification not found" });
     }
 
+    // Clear the cache after deleting a notification
+    notificationCache.del("notifications");
+
     res.status(200).json({
       message: "Notification deleted successfully",
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
 export const fetchNotification = async (req, res) => {
-try {
-  const notifications = await Notification.find().sort({ createdAt: 1 });
-  return res.status(200).json({ notifications: notifications.reverse() });
-} catch (error) {
-  console.log(error);
-  res.status(500).json({ error: error.message });
-}
+  try {
+    let notifications = notificationCache.get("notifications");
+    if (!notifications) {
+      notifications = await Notification.find().sort({ createdAt: 1 });
+      notificationCache.set("notifications", notifications);
+    }
 
+    return res.status(200).json({ notifications: notifications.reverse() });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
 };
 
 export const fetchNotificationById = async (req, res) => {
@@ -77,6 +94,6 @@ export const fetchNotificationById = async (req, res) => {
     return res.status(200).json({ notification });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: error.message });
   }
 };
