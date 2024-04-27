@@ -191,23 +191,20 @@ export const registerUser = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
+User
 
 export const fetchUsers = async (req, res) => {
-  const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
-  const limit = parseInt(req.query.limit) || 10; // Default to 10 documents per page
-  const skip = (page - 1) * limit;
-
   try {
-    const users = await User.find({}, '-sub -idUpload -refreals -regEvents -regWorkshop')
-                             .skip(skip)
-                             .limit(limit);
+    const users = await User.aggregate([
+      { $project: { sub: 0, idUpload: 0, refreals: 0, regEvents: 0, regWorkshop: 0 } }, // Exclude specified fields
+      // Add more aggregation stages if needed
+    ]);
     return res.status(200).json({ users });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 
 
 export const fetchUserById = async (req, res) => {
