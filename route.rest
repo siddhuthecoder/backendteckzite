@@ -7,12 +7,14 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:4000/user/register
+
+POST http://localhost:4001/user/register
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjVmODNhZGNjYzkzMTdhODI0ODFlYWM5IiwiaWF0IjoxNzEzMzU0MzE2LCJleHAiOjE3MTMzOTc1MTZ9.dkK1EQAjt8XDf6itN_6BdJSHAL0272oZ1Iajhxsmlzc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjVmODNhZGNjYzkzMTdhODI0ODFlYWM5IiwiaWF0IjoxNzE0NTU1NzA1LCJleHAiOjE3MTQ1OTg5MDV9.hwYdCj1_g_xyAF-2Vhy1GmtK7V0Znt94VhNRiexzLFY
+
 
 {
-    "email": "siddarthyernagula2004@gmail.com",
+    "email": "codewithsiddhu@gmail.com",
     "firstName": "John",
     "lastName": "Doe",
     "college": "Example University",
@@ -32,7 +34,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjVmO
 }
 
 ###
-DELETE http://localhost:4000/user/delete/tzk241183
+DELETE http://localhost:4001/user/delete/tzk245029
 
 
 
@@ -76,7 +78,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjVmO
 
 ###
 
-GET http://localhost:4000/user/getAll
+
+GET https://backendteckzite.onrender.com/user/getAll
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjVmODNhZGNjYzkzMTdhODI0ODFlYWM5IiwiaWF0IjoxNzE0MjE0ODAyLCJleHAiOjE3MTQyNTgwMDJ9.pf-8ak6jZTBRNvxRcmgcF2CMqszU8zcKdIltgfmVpnY
 
 
@@ -86,8 +89,18 @@ Content-Type: application/json
 
 
 ###
-GET http://localhost:4000/events/all-events
+GET http://localhost:8000/events/all-events
 Content-Type: application/json
 
 
+
+###
+GET http://localhost:8000/notifications/all-notifications
+Content-Type: application/json
+
+###
+
+GET http://localhost:8000/workshops/all-workshops
+
+Content-Type: application/json
 

@@ -6,6 +6,11 @@ import crypto from "crypto";
 import SignUser from "../models/signUserModel.js";
 import { log } from "console";
 import nodemailer from 'nodemailer'
+import QRCode from 'qrcode'
+import NodeCache from "node-cache";
+const userCache = new NodeCache({ stdTTL: 3600 });
+import axios from "axios"; // Cache users for 1 hour
+
 
 export const loginUser = async (req, res) => {
   const { email, sub } = req.body;
@@ -95,6 +100,7 @@ export const editUser = async (req, res) => {
   }
 };
 
+
 export const registerUser = async (req, res) => {
   const {
     email,
@@ -125,10 +131,10 @@ export const registerUser = async (req, res) => {
     if (!mode) {
       return res.status(400).json({ error: "Mode Error" });
     }
-    if (mode !== "offline_mode") {
-      if (!razorpay_order_id) {
-        return res.status(400).json({ error: "Payment Check Error" });
-      }
+
+    // Assuming razorpay_order_id is defined somewhere
+    if (mode !== "offline_mode" && !razorpay_order_id) {
+      return res.status(400).json({ error: "Payment Check Error" });
     }
 
     const sub = await bcrypt.hash(email, 12);
@@ -161,38 +167,29 @@ export const registerUser = async (req, res) => {
       expiresIn: "1d",
     });
 
-    // const ref = await User.findOneAndUpdate(
-    //   { tzkid: referredBy.toLowerCase() },
-    //   { $push: { refreals: user.tzkid } }
-    // );
+    // Generate the URL based on user _id
+    const qrUrl = `example.com/userInfo/${user._id}`;
 
-    // if (!ref) {
-    //   return res.status(200).json({
-    //     token,
-    //     user,
-    //     message: "Registration Succesful\nReferral was not valid",
-    //   });
-    // }
-     //send mail
-    //  console.log("Teckzite ID:", user.tzkid);
-     const teckziteId = user.tzkid;
-  
-     
-     await sendemail(
-    user
-     )
+    // Generate QR code image
+    const qrCodeImage = await QRCode.toDataURL(qrUrl);
 
-     userCache.del("users");
+    // Save the QR code image to the database along with other user information
+    user.qrimage = qrCodeImage; // Assuming you have a field named qrCodeImage in your User schema
+    await user.save();
+
+    // Send email
+    await sendemail(user);
+
+    userCache.del("users");
     return res
       .status(200)
-      .json({ user, token, message: "Registration Succesful" });
+      .json({ user, token, message: "Registration Successful" });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
-import NodeCache from "node-cache";
-const userCache = new NodeCache({ stdTTL: 3600 }); // Cache users for 1 hour
+
 
 export const fetchUsers = async (req, res) => {
   try {
@@ -343,6 +340,16 @@ export const paymentVerification = async (req, res) => {
       mode: userData.mode,
     });
 
+    // Generate the URL based on user _id
+    const qrUrl = `example.com/userInfo/${user._id}`;
+
+    // Generate QR code image
+    const qrCodeImage = await QRCode.toDataURL(qrUrl);
+
+    // Save the QR code image to the database along with other user information
+    user.qrimage = qrCodeImage; // Assuming you have a field named qrCodeImage in your User schema
+    await user.save();
+
     await SignUser.findOneAndDelete({ email: userData.email });
 
     if (!user) {
@@ -364,26 +371,18 @@ export const paymentVerification = async (req, res) => {
           token,
           user,
           success: true,
-          message: "Registration Succesful\nReferral was not valid",
+          message: "Registration Successful\nReferral was not valid",
         });
       }
     }
 
+    // Send email
+    await sendemail(user);
 
-
-  
-     
-     await sendemail(
-     user
-     )
- 
-     userCache.del("users");
+    userCache.del("users");
     return res
       .status(200)
       .json({ success: true, token, user, message: "Registration SuccessFull" });
-
-
-
   } else {
     return res.status(400).json({
       message: "Payment Failed Due to Signature not matched",
@@ -394,9 +393,8 @@ export const paymentVerification = async (req, res) => {
 
 
 
-const sendemail = async ( 
-  user) => {
- 
+
+const sendemail = async (user) => {
   try {
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.email",
@@ -410,29 +408,38 @@ const sendemail = async (
       },
     });
 
+  
+
     // Craft the email content
     const mailOptions = {
       from: "noreply@gmail.com",
       to: user.email,
-      subject: "Teckzite Registration Successfull",
+      subject: "Teckzite Registration Successful",
       html: `
-       <h1>Cheerio Invitation</h1>
-       <h1>${user.tzkid}</h1>
-       <h1>${user.email}</h1>
-       <h1>${user.firstName}</h1>
-       <h1>${user.lastName}</h1>
-       <h1>${user.college}</h1>
-       <h1>${user.phno}</h1>
-       <h1>${user.year}</h1>
-       <h1>${user.branch}</h1>
-       <h1>${user.collegeId}</h1>
-       <h1>${user.gender}</h1>
-       <h1>${user.amountPaid}</h1>
-       <h1>${user.state } ${user.district} ${user.city} </h1>
-      <h1>${user.mode}</h1>
-    
-
+        <h1>Cheerio Invitation</h1>
+        <h1>${user.tzkid}</h1>
+        <h1>${user.email}</h1>
+        <h1>${user.firstName}</h1>
+        <h1>${user.lastName}</h1>
+        <h1>${user.college}</h1>
+        <h1>${user.phno}</h1>
+        <h1>${user.year}</h1>
+        <h1>${user.branch}</h1>
+        <h1>${user.collegeId}</h1>
+        <h1>${user.gender}</h1>
+        <h1>${user.amountPaid}</h1>
+        <h1>${user.state} ${user.district} ${user.city}</h1>
+        <h1>${user.mode}</h1>
+        <img src="cid:qrimae" alt='qrimage'  style=" width: 100px; height: 100px;"/>
       `,
+      attachments: [
+        {
+          filename: 'qrcode.png',
+          path:`${user.qrimage}` ,
+          cid:'qrimae'
+        
+        }
+      ]
     };
 
     // Send the email
@@ -442,6 +449,7 @@ const sendemail = async (
     console.error("Error sending email:", error);
   }
 };
+
 
 
 export const getTopReferrals = async (req, res) => {

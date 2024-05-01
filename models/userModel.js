@@ -21,6 +21,7 @@ const UserSchema = new mongoose.Schema(
     city: String,
     sub: { type: String, unique: true },
     idUpload: String,
+    qrimage:String,
     refreals: {
       type: [{ type: String }],
       default: [],
