@@ -168,8 +168,7 @@ export const registerUser = async (req, res) => {
     });
 
     // Generate the URL based on user _id
-    const qrUrl = `example.com/userInfo/${user._id}`;
-
+    const qrUrl = `https://teckzite.vercel.app/user/user-info/${user._id}`;
     // Generate QR code image
     const qrCodeImage = await QRCode.toDataURL(qrUrl);
 
@@ -341,7 +340,7 @@ export const paymentVerification = async (req, res) => {
     });
 
     // Generate the URL based on user _id
-    const qrUrl = `example.com/userInfo/${user._id}`;
+    const qrUrl = `https://teckzite.vercel.app/user/user-info/${user._id}`;
 
     // Generate QR code image
     const qrCodeImage = await QRCode.toDataURL(qrUrl);
@@ -499,3 +498,23 @@ export const deleteUser = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+export const userDeatilsonScan= async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Find user by userId
+    const user = await User.findById(userId);
+
+    if (!user) {
+      // If user not found, return 404 status
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // If user found, return user data
+    return res.status(200).json({ user });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+}

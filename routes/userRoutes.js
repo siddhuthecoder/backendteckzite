@@ -9,7 +9,8 @@ import {
   paymentVerification,
   getTopReferrals,
   editUser,
-  deleteUser
+  deleteUser,
+  userDeatilsonScan
 } from "../controllers/userControllers.js";
 import { verifyUserToken } from "../middleware/auth.js";
 import adminTokenCheck from "../middleware/adminTokenCheck.js";
@@ -28,5 +29,8 @@ router.post("/order/create", createOrder);
 router.post("/order/verify", paymentVerification);
 
 router.get("/refs/top", getTopReferrals);
+
+// Route to handle QR code scanning
+router.get('/user-info/:userId', userDeatilsonScan);
 
 export default router;

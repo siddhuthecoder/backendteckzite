@@ -8,6 +8,7 @@ Content-Type: application/json
 
 ###
 
+
 POST http://localhost:4001/user/register
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjVmODNhZGNjYzkzMTdhODI0ODFlYWM5IiwiaWF0IjoxNzE0NTU1NzA1LCJleHAiOjE3MTQ1OTg5MDV9.hwYdCj1_g_xyAF-2Vhy1GmtK7V0Znt94VhNRiexzLFY
@@ -34,7 +35,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjVmO
 }
 
 ###
-DELETE http://localhost:4001/user/delete/tzk245029
+DELETE http://localhost:4001/user/delete/tzk245030
 
 
 
@@ -104,3 +105,9 @@ GET http://localhost:8000/workshops/all-workshops
 
 Content-Type: application/json
 
+
+
+###
+GET http://localhost:4001/user/user-info/6632180ebb7fba3a48f5e059
+
+Content-Type: application/json
