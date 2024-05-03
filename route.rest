@@ -1,4 +1,4 @@
-POST http://localhost:4000/admin/login
+POST http://localhost:4001/admin/login
 Content-Type: application/json
 
 {
@@ -11,7 +11,7 @@ Content-Type: application/json
 
 POST http://localhost:4001/user/register
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjVmODNhZGNjYzkzMTdhODI0ODFlYWM5IiwiaWF0IjoxNzE0NTU1NzA1LCJleHAiOjE3MTQ1OTg5MDV9.hwYdCj1_g_xyAF-2Vhy1GmtK7V0Znt94VhNRiexzLFY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjVmODNhZGNjYzkzMTdhODI0ODFlYWM5IiwiaWF0IjoxNzE0NjY1OTYxLCJleHAiOjE3MTQ3MDkxNjF9.WqR2X-W2OAi-kIXHyEKY27NuRzQlltcpdcawB61nMwM
 
 
 {
@@ -35,7 +35,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjVmO
 }
 
 ###
-DELETE http://localhost:4001/user/delete/tzk245030
+DELETE http://localhost:4001/user/delete/tzk245044
+
+###
+
+DELETE http://localhost:4001/user/delete/tzk245043
+
 
 
 

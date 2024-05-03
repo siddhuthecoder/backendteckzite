@@ -392,7 +392,6 @@ export const paymentVerification = async (req, res) => {
 
 
 
-
 const sendemail = async (user) => {
   try {
     const transporter = nodemailer.createTransport({
@@ -407,36 +406,99 @@ const sendemail = async (user) => {
       },
     });
 
-  
-
     // Craft the email content
     const mailOptions = {
       from: "noreply@gmail.com",
       to: user.email,
       subject: "Teckzite Registration Successful",
       html: `
-        <h1>Cheerio Invitation</h1>
-        <h1>${user.tzkid}</h1>
-        <h1>${user.email}</h1>
-        <h1>${user.firstName}</h1>
-        <h1>${user.lastName}</h1>
-        <h1>${user.college}</h1>
-        <h1>${user.phno}</h1>
-        <h1>${user.year}</h1>
-        <h1>${user.branch}</h1>
-        <h1>${user.collegeId}</h1>
-        <h1>${user.gender}</h1>
-        <h1>${user.amountPaid}</h1>
-        <h1>${user.state} ${user.district} ${user.city}</h1>
-        <h1>${user.mode}</h1>
-        <img src="cid:qrimae" alt='qrimage'  style=" width: 100px; height: 100px;"/>
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Teckzite Registration Successful</title>
+        <style>
+          /* Reset styles */
+          body, h1, p {
+            margin: 0;
+            padding: 0;
+          }
+          
+          /* Container styles */
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: black;
+          }
+          
+          /* Header styles */
+          .header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+          }
+          
+          /* Content styles */
+          .content {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            margin-top: 20px;
+            background: rgba( 74, 164, 41, 0.25 );
+            box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+            backdrop-filter: blur( 13.5px );
+            -webkit-backdrop-filter: blur( 13.5px );
+            border-radius: 10px;
+            border: 1px solid rgba( 255, 255, 255, 0.18 );
+            color:white;
+
+          }
+          
+          /* Footer styles */
+          .footer {
+            text-align: center;
+            margin-top: 20px;
+            color:white;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>Teckzite Registration Successfull</h1>
+          </div>
+          <div class="content">
+            <p>TZKID: ${user.tzkid}</p>
+            <p>Email: ${user.email}</p>
+            <p>First Name: ${user.firstName}</p>
+            <p>Last Name: ${user.lastName}</p>
+            <p>College: ${user.college}</p>
+            <p>Phone Number: ${user.phno}</p>
+            <p>Year: ${user.year}</p>
+            <p>Branch: ${user.branch}</p>
+            <p>College ID: ${user.collegeId}</p>
+            <p>Gender: ${user.gender}</p>
+            <p>Amount Paid: ${user.amountPaid}</p>
+            <p>Location: ${user.state}, ${user.district}, ${user.city}</p>
+            <p>Payment Mode: ${user.mode}</p>
+            <img src="cid:qrimae" alt='qrimage' style="width: 100px; height: 100px;" />
+          </div>
+          <div class="footer">
+            <marquee>Thank you for registring</marquee>
+          </div>
+        </div>
+      </body>
+      </html>
       `,
       attachments: [
         {
           filename: 'qrcode.png',
-          path:`${user.qrimage}` ,
-          cid:'qrimae'
-        
+          path: `${user.qrimage}`,
+          cid: 'qrimae'
         }
       ]
     };
